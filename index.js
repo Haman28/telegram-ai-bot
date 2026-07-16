@@ -57,10 +57,9 @@ async function generateAIResponse(message) {
 
     try {
 
-
       const response = await ai.models.generateContent({
 
-        model: "gemini-flash-latest",
+        model: "gemini-flash-lite-latest",
 
         contents: [
           {
@@ -92,7 +91,6 @@ async function generateAIResponse(message) {
       );
 
 
-      // Retry temporary errors
       if (
         error.status === 503 ||
         error.status === 429
@@ -113,7 +111,7 @@ async function generateAIResponse(message) {
 
 
         await new Promise(resolve =>
-          setTimeout(resolve, 5000)
+          setTimeout(resolve, 10000)
         );
 
 
@@ -153,7 +151,6 @@ bot.onText(/\/start/, async (msg) => {
 
 
 
-
 // Messages
 bot.on("message", async (msg) => {
 
@@ -166,7 +163,6 @@ bot.on("message", async (msg) => {
   if (!userMessage) return;
 
 
-  // Ignore commands
   if (userMessage.startsWith("/")) return;
 
 
@@ -198,7 +194,6 @@ bot.on("message", async (msg) => {
       );
 
 
-      // prevent Telegram flood limits
       await new Promise(resolve =>
         setTimeout(resolve, 300)
       );
@@ -229,7 +224,7 @@ bot.on("message", async (msg) => {
 
       await bot.sendMessage(
         chatId,
-        "⚠️ Gemini API quota exceeded. Please check your Google AI Studio quota or billing settings."
+        "⚠️ Gemini quota is temporarily exhausted. Please try again later."
       );
 
 
